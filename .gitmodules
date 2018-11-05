@@ -1,0 +1,6 @@
+[submodule "logger-cpp"]
+	path = logger-cpp
+	url = git://github.com/review/logger-cpp.git
+[submodule "cxxopts"]
+	path = cxxopts
+	url = git://github.com/jarro2783/cxxopts.git
