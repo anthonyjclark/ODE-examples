@@ -4,12 +4,34 @@
 
 void handle_collisions(void *sim, dGeomID geom1, dGeomID geom2);
 
-
-struct UGV {
-
+struct Simulation {
   dWorldID world_;
   dSpaceID space_;
   dJointGroupID contact_group_;
+
+  std::vector<Things> things;
+
+  void step() {
+    for (const auto &thing : Things) {
+      thing.step();
+    }
+  }
+
+  bool step(dReal time_step, dReal time_stop)
+  {
+    dSpaceCollide(space_, this, &handle_collisions);
+    dWorldStep(world_, time_step);
+    dJointGroupEmpty(contact_group_);
+
+    time_ += time_step;
+
+    return time_ < time_stop;
+  }
+
+}
+
+struct UGV {
+
 
   dBodyID chassis_;
   dGeomID chassis_geom_;
@@ -89,16 +111,7 @@ struct UGV {
 
   }
 
-  bool step(dReal time_step, dReal time_stop)
-  {
-    dSpaceCollide(space_, this, &handle_collisions);
-    dWorldStep(world_, time_step);
-    dJointGroupEmpty(contact_group_);
 
-    time_ += time_step;
-
-    return time_ < time_stop;
-  }
 };
 
 
